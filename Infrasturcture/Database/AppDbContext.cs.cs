@@ -2,6 +2,7 @@
 using Domain.Models.Matches;
 using Domain.Models.Messages;
 using Domain.Models.Participants;
+using Domain.Models.Roles;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ namespace Infrastructure.Database
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
         public DbSet<Event> Events { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Participant> Participants { get; set; }
@@ -49,6 +52,18 @@ namespace Infrastructure.Database
                 .HasForeignKey(m => m.User2Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
+     
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany()
+                .UsingEntity(j => j.ToTable("UserRoles"));
+
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Admin" },
+                new Role { Id = 2, Name = "User" }
+            );
+
 
             modelBuilder.Entity<User>().HasData(
                 new User
@@ -79,7 +94,6 @@ namespace Infrastructure.Database
                 }
             );
 
-         
         }
     }
 }

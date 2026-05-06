@@ -16,15 +16,15 @@ namespace API
 
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             //builder.Services.AddApplication();
             builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
 
