@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Domain.Models.Messages
 {
-    internal class Message
+    public class Message
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid RecieverId { get; set; }
+        public Guid ReceiverId { get; set; }
         public Guid SenderId { get; set; }
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
         public string Text { get; set; }

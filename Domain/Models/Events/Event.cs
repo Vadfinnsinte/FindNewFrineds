@@ -7,7 +7,7 @@ namespace Domain.Models.Events
 {
     public class Event
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Adress { get; set; }
         public string City { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

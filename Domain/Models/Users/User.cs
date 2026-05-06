@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Participants;
+using Domain.Models.Matches;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,4 +22,6 @@ public class User
 
     public string Interests { get; set; }
     public List<Participant> Participants { get; set; } = new();
+    public List<Match> MatchesAsUser1 { get; set; } = new();
+    public List<Match> MatchesAsUser2 { get; set; } = new();
 }
