@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.Models.Matches
 {
-    public class Match
+    public class FriendMatch
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime CreatedAt { get; set; }
