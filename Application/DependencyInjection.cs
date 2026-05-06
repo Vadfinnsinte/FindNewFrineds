@@ -1,5 +1,5 @@
-﻿//using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Application
 {
@@ -9,10 +9,13 @@ namespace Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
 
-            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(assembly));
 
-            services.AddAutoMapper(assembly);
-            //services.AddValidatorsFromAssembly(assembly);
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(assembly);
+            });
 
             return services;
         }
