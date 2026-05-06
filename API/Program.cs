@@ -1,7 +1,11 @@
 
-using Microsoft.EntityFrameworkCore;
+using API.Authentication;
+using Application;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace API
 {
     public class Program
@@ -19,8 +23,13 @@ namespace API
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             //builder.Services.AddApplication();
-            var app = builder.Build();
+            builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
+            var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
+
+            builder.Services.AddMyCustomAuthentication(key);
+            var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -32,11 +41,11 @@ namespace API
                     options.RoutePrefix = "swagger";
                 });
             }
-     
+    
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
