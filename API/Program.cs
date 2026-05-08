@@ -1,11 +1,14 @@
 
 using API.Authentication;
+using API.Middleware;
 using Application;
+using Application.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Database;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Infrastructure.Repositories.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 namespace API
 {
     public class Program
@@ -26,10 +29,16 @@ namespace API
             builder.Services.AddMediatR(cfg =>
              cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenService>();
+
             var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
 
             builder.Services.AddMyCustomAuthentication(key);
+
             var app = builder.Build();
+            app.UseCustomExceptionHandler();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
