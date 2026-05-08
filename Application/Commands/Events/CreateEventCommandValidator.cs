@@ -14,6 +14,9 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
         RuleFor(x => x.Dto.Adress)
             .NotEmpty().WithMessage("Adress is required");
+        RuleFor(x => x.Dto.Category)
+            .NotEmpty()
+            .WithMessage("Category is required");
 
         RuleFor(x => x.Dto.DateOfEvent)
             .GreaterThan(DateTime.UtcNow)
