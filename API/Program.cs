@@ -1,7 +1,14 @@
 
-using Microsoft.EntityFrameworkCore;
+using API.Authentication;
+using API.Middleware;
+using Application;
+using Application.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Database;
+using Infrastructure.Repositories.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+
 namespace API
 {
     public class Program
@@ -12,16 +19,29 @@ namespace API
 
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             //builder.Services.AddApplication();
+            builder.Services.AddMediatR(cfg =>
+             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenService>();
+
+            var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
+
+            builder.Services.AddMyCustomAuthentication(key);
+
             var app = builder.Build();
 
+            app.UseCustomExceptionHandler();
             // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
@@ -32,11 +52,11 @@ namespace API
                     options.RoutePrefix = "swagger";
                 });
             }
-     
+    
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
