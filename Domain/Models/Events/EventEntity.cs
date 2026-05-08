@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.Models.Events
 {
-    public class Event
+    public class EventEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Adress { get; set; }

@@ -19,7 +19,7 @@ namespace Infrastructure.Database
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
-        public DbSet<Event> Events { get; set; }
+        public DbSet<EventEntity> Events { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<FriendMatch> Matches { get; set; }

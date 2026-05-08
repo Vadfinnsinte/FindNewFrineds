@@ -17,8 +17,9 @@ public class MappingProfile : Profile
         CreateMap<UpdateUserDTO, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-  
-        CreateMap<AddEventDTO, Event>();
+
+        CreateMap<AddEventDTO, EventEntity>()
+     .ForMember(dest => dest.CreatedBy, opt => opt.Ignore());
 
 
         CreateMap<CreateMessageDTO, Message>()

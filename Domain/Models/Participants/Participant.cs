@@ -10,7 +10,7 @@ namespace Domain.Models.Participants
     {
         public Guid id { get; set; } = Guid.NewGuid();
         public Guid EventId { get; set; }
-        public Event Event { get; set; }
+        public EventEntity Event { get; set; }
 
         public Guid UserId { get; set; }
         public User User { get; set; }
