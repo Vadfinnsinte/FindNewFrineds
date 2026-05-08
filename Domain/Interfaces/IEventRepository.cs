@@ -8,5 +8,8 @@ namespace Domain.Interfaces
     public interface IEventRepository
     {
         Task AddAsync(EventEntity eventEntity);
+        Task<EventEntity?> GetByIdAsync(Guid id);
+        Task UpdateAsync(EventEntity eventEntity);
+        Task<List<EventEntity>> GetAllAsync();
     }
 }

@@ -1,39 +1,40 @@
-﻿
-using Application.Commands.Event;
-using Application.Common;
+﻿using Application.Common;
 using AutoMapper;
 using Domain.Interfaces;
-using Domain.Models.Events;
 using MediatR;
 
-
-namespace Application.Commands.Events
+public class EditEventCommandHandler
+    : IRequestHandler<EditEventCommand, OperationResult<string>>
 {
-    public class CreateEventCommandHandler
-     : IRequestHandler<CreateEventCommand, OperationResult<string>>
+    private readonly IEventRepository _repo;
+    private readonly IMapper _mapper;
+
+    public EditEventCommandHandler(
+        IEventRepository repo,
+        IMapper mapper)
     {
-        private readonly IEventRepository _eventRepository;
-        private readonly IMapper _mapper;
+        _repo = repo;
+        _mapper = mapper;
+    }
 
-        public CreateEventCommandHandler(
-            IEventRepository eventRepository,
-            IMapper mapper)
-        {
-            _eventRepository = eventRepository;
-            _mapper = mapper;
-        }
+    public async Task<OperationResult<string>> Handle(
+        EditEventCommand request,
+        CancellationToken cancellationToken)
+    {
+        var entity = await _repo.GetByIdAsync(request.EventId);
 
-        public async Task<OperationResult<string>> Handle(
-            CreateEventCommand request,
-            CancellationToken cancellationToken)
-        {
-            var entity = _mapper.Map<EventEntity>(request.Dto);
+        if (entity == null)
+            return OperationResult<string>.Failure("Event not found");
 
-            entity.CreatedBy = request.CreatedBy;
+        // auth rule
+        if (!request.IsAdmin && entity.CreatedBy != request.UserId)
+            return OperationResult<string>.Failure("Not allowed");
 
-            await _eventRepository.AddAsync(entity);
+       
+        _mapper.Map(request.Dto, entity);
 
-            return OperationResult<string>.Success("Event created");
-        }
+        await _repo.UpdateAsync(entity);
+
+        return OperationResult<string>.Success("Event updated");
     }
 }

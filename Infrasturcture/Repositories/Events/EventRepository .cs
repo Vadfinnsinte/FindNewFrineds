@@ -1,6 +1,8 @@
 ﻿using Domain.Interfaces;
 using Domain.Models.Events;
 using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
+
 
 
 namespace Infrastructure.Repositories.Events
@@ -18,6 +20,20 @@ namespace Infrastructure.Repositories.Events
         {
             await _context.Events.AddAsync(eventEntity);
             await _context.SaveChangesAsync();
+        }
+        public async Task<EventEntity?> GetByIdAsync(Guid id)
+        {
+            return await _context.Events
+                .FirstOrDefaultAsync(e => e.Id == id);
+        }
+        public async Task UpdateAsync(EventEntity entity)
+        {
+            _context.Events.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<EventEntity>> GetAllAsync()
+        {
+            return await _context.Events.ToListAsync();
         }
     }
 }
