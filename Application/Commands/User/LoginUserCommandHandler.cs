@@ -1,12 +1,13 @@
 ﻿using Application.Commands.User;
 using Application.Interfaces;
 using Application.Common.Exceptions;
+using Application.Common;
 
 using Domain.Interfaces;
 using MediatR;
 
 public class LoginCommandHandler
-    : IRequestHandler<LoginUserCommand, LoginResponse>
+        : IRequestHandler<LoginUserCommand, OperationResult<LoginResponse>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -22,27 +23,35 @@ public class LoginCommandHandler
         _jwt = jwt;
     }
 
-    public async Task<LoginResponse> Handle(
+    public async Task<OperationResult<LoginResponse>> Handle(
         LoginUserCommand request,
         CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email);
-
         if (user == null)
-            throw new UnauthorizedException("Invalid credentials");
+        {
+            return OperationResult<LoginResponse>
+                .Failure("Invalid credentials");
+        }
 
         var valid = _passwordHasher.Verify(
             request.Password,
             user.PasswordHash);
 
         if (!valid)
-            throw new UnauthorizedException("Invalid credentials");
+        {
+            return OperationResult<LoginResponse>
+                .Failure("Invalid credentials");
+        }
 
         var token = _jwt.GenerateToken(user);
 
-        return new LoginResponse
+        var response = new LoginResponse
         {
             Token = token
         };
+
+        return OperationResult<LoginResponse>
+            .Success(response);
     }
 }

@@ -38,8 +38,10 @@ namespace API
             builder.Services.AddMyCustomAuthentication(key);
 
             var app = builder.Build();
+
             app.UseCustomExceptionHandler();
             // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();

@@ -19,15 +19,10 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserCommand command)
         {
-            try
-            {
+   
                 var result = await _mediator.Send(command);
-            return Ok(result);
+                return Ok(result);
 
-        }catch (UnauthorizedException)
-            {
-                return Unauthorized();
-    }
-}
+        }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Commands.User;
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Application
@@ -16,7 +19,8 @@ namespace Application
             {
                 cfg.AddMaps(assembly);
             });
-
+            services.AddValidatorsFromAssemblyContaining<LoginUserCommandValidator>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return services;
         }
     }
