@@ -1,10 +1,7 @@
 ﻿using Domain.Models.Matches;
 using Domain.Models.Participants;
 using Domain.Models.Roles;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+
 
 namespace Domain.Models.Users;
 public class User
@@ -28,5 +25,6 @@ public class User
     public List<Participant> Participants { get; set; } = new();
     public List<FriendMatch> MatchesAsUser1 { get; set; } = new();
     public List<FriendMatch> MatchesAsUser2 { get; set; } = new();
-    public ICollection<Role> Roles { get; set; } = new List<Role>();
+    public ICollection<UserRole> UserRoles { get; set; }
+        = new List<UserRole>();
 }

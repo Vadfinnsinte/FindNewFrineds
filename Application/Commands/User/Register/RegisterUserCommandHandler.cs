@@ -12,15 +12,18 @@ public class RegisterUserCommandHandler
     : IRequestHandler<RegisterUserCommand, OperationResult<string>>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
 
     public RegisterUserCommandHandler(
         IUserRepository userRepository,
+        IRoleRepository roleRepository,
         IPasswordHasher passwordHasher,
         IMapper mapper)
     {
         _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _passwordHasher = passwordHasher;
         _mapper = mapper;
     }
@@ -43,11 +46,21 @@ public class RegisterUserCommandHandler
         user.PasswordHash =
             _passwordHasher.Hash(request.Dto.Password);
 
-        user.Roles.Add(new Role
+
+        var roleName = request.CreateAdmin ? "Admin" : "User";
+
+        var role = await _roleRepository.GetByNameAsync(roleName);
+
+        if (role == null)
         {
-            Name = request.CreateAdmin
-                ? "Admin"
-                : "User"
+            return OperationResult<string>
+                .Failure("Role not found");
+        }
+
+        user.UserRoles.Add(new UserRole
+        {
+            User = user,
+            Role = role
         });
 
         await _userRepository.AddAsync(user);

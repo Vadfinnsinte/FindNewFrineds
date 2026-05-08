@@ -17,6 +17,7 @@ namespace Infrastructure.Database
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<Event> Events { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -40,6 +41,7 @@ namespace Infrastructure.Database
                 .WithMany(e => e.Participants)
                 .HasForeignKey(p => p.EventId);
 
+
             modelBuilder.Entity<FriendMatch>()
                 .HasOne(m => m.User1)
                 .WithMany(u => u.MatchesAsUser1)
@@ -52,13 +54,21 @@ namespace Infrastructure.Database
                 .HasForeignKey(m => m.User2Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
-     
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Roles)
-                .WithMany()
-                .UsingEntity(j => j.ToTable("UserRoles"));
 
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
 
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+
+         
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Admin" },
                 new Role { Id = 2, Name = "User" }
@@ -76,7 +86,7 @@ namespace Infrastructure.Database
                     Bio = "Gillar träning och kaffe",
                     Interests = "Gym, Coffee, Music",
                     Lonely = false,
-                    PasswordHash = "seed",
+                    PasswordHash = "AQAAAAIAAYagAAAAEI4hjOuDOPeVr7FfOvbhiJ2RDi3gYzRbtELCqYLi+sH56T0ePP1HPGmYfjjq+LCc3w==",
                     CreatedAt = new DateTime(2024, 4, 2, 14, 30, 0, DateTimeKind.Utc)
                 },
                 new User
@@ -89,11 +99,10 @@ namespace Infrastructure.Database
                     Bio = "Älskar spel och tech",
                     Interests = "Gaming, Tech",
                     Lonely = true,
-                    PasswordHash = "seed",
+                    PasswordHash = "AQAAAAIAAYagAAAAEI4hjOuDOPeVr7FfOvbhiJ2RDi3gYzRbtELCqYLi+sH56T0ePP1HPGmYfjjq+LCc3w==",
                     CreatedAt = new DateTime(2024, 4, 2, 14, 30, 0, DateTimeKind.Utc)
                 }
             );
-
         }
     }
 }

@@ -6,6 +6,8 @@ using Application.Interfaces;
 using Domain.Interfaces;
 using Infrastructure.Database;
 using Infrastructure.Repositories.Authorization;
+using Infrastructure.Repositories.Roles;
+using Infrastructure.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -25,13 +27,14 @@ namespace API
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            //builder.Services.AddApplication();
-            builder.Services.AddMediatR(cfg =>
-             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+            builder.Services.AddApplication();
+            //builder.Services.AddMediatR(cfg =>
+            // cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenService>();
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
 
@@ -39,7 +42,6 @@ namespace API
 
             var app = builder.Build();
 
-            app.UseCustomExceptionHandler();
             // Configure the HTTP request pipeline.
 
             if (app.Environment.IsDevelopment())

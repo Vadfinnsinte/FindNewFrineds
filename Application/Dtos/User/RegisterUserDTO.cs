@@ -17,13 +17,11 @@ namespace Application.Dtos.User
 
         public string City { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public string Fullname { get; set; }
 
         public bool Lonely { get; set; }
 
         public string Interests { get; set; }
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
+
     }
 }
