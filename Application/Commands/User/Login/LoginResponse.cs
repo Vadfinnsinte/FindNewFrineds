@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Commands.User
+namespace Application.Commands.User.Login
 {
     public class LoginResponse
     {

@@ -13,7 +13,7 @@ public class MappingProfile : Profile
     {
 
         CreateMap<User, ReadUserDTO>();
-
+        CreateMap<RegisterUserDTO, User>();
         CreateMap<UpdateUserDTO, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

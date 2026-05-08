@@ -1,6 +1,9 @@
-﻿using Application.Commands.User;
+﻿using Application.Commands.User.Register;
+using Application.Commands.User.Login;
 using Application.Common.Exceptions;
+using Application.Dtos.User;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -24,5 +27,44 @@ namespace API.Controllers
                 return Ok(result);
 
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(
+        RegisterUserDTO dto)
+        {
+            var command = new RegisterUserCommand
+            {
+                Dto = dto
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("register-admin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterUserDTO dto)
+        {
+            var command = new RegisterUserCommand
+            {
+                Dto = dto,
+                CreateAdmin = true
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
     }
+   
 }

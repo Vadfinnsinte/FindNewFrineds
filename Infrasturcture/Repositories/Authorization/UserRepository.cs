@@ -20,5 +20,10 @@ namespace Infrastructure.Repositories.Authorization
                 .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
+        public async Task AddAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

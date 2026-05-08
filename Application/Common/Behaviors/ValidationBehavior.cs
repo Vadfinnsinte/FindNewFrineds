@@ -1,12 +1,15 @@
-﻿using FluentValidation;
+﻿using Application.Common;
+using FluentValidation;
 using MediatR;
 
 public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
+    where TResponse : class
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    public ValidationBehavior(
+        IEnumerable<IValidator<TRequest>> validators)
     {
         _validators = validators;
     }
@@ -24,11 +27,29 @@ public class ValidationBehavior<TRequest, TResponse>
                 .Select(v => v.Validate(context))
                 .SelectMany(r => r.Errors)
                 .Where(f => f != null)
+                .Select(f => f.ErrorMessage)
                 .ToList();
 
             if (failures.Any())
             {
-                throw new ValidationException(failures);
+                var responseType = typeof(TResponse);
+
+                if (responseType.IsGenericType &&
+                    responseType.GetGenericTypeDefinition() == typeof(OperationResult<>))
+                {
+                    var innerType = responseType.GetGenericArguments()[0];
+
+                    var resultType =
+                        typeof(OperationResult<>).MakeGenericType(innerType);
+
+                    var failureMethod =
+                        resultType.GetMethod(nameof(OperationResult<object>.Failure));
+
+                    var failureResult =
+                        failureMethod?.Invoke(null, new object[] { failures.ToArray() });
+
+                    return (TResponse)failureResult!;
+                }
             }
         }
 
