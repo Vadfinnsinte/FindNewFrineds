@@ -1,8 +1,6 @@
-﻿
-
-using Application.Common;
+﻿using Application.Common;
 using MediatR;
-namespace Application.Commands.User
+namespace Application.Commands.User.Login
 {
     public class LoginUserCommand
       : IRequest<OperationResult<LoginResponse>>

@@ -32,13 +32,16 @@ namespace Infrastructure.Repositories.Authorization
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-          
-                foreach (var role in user.Roles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.Name));
-                }
 
-                var token = new JwtSecurityToken(
+            foreach (var userRole in user.UserRoles)
+            {
+                claims.Add(new Claim(
+                    ClaimTypes.Role,
+                    userRole.Role.Name
+                ));
+            }
+
+            var token = new JwtSecurityToken(
                     issuer: _config["Jwt:Issuer"],
                     audience: _config["Jwt:Audience"],
                     claims: claims,

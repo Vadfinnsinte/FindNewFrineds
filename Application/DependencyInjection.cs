@@ -1,4 +1,4 @@
-﻿using Application.Commands.User;
+﻿using Application.Commands.User.Login;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
