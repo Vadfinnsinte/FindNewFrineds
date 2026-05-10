@@ -55,7 +55,7 @@ namespace API.Controllers
         }
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditEvent(Guid id, EditEventDTO dto)
+        public async Task<IActionResult> EditEvent(Guid id, EditEventDTO dto) 
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

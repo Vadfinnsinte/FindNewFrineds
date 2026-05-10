@@ -1,4 +1,5 @@
-﻿using Domain.Models.Matches;
+﻿using Domain.Models.Likes;
+using Domain.Models.Matches;
 using Domain.Models.Participants;
 using Domain.Models.Roles;
 
@@ -27,4 +28,6 @@ public class User
     public List<FriendMatch> MatchesAsUser2 { get; set; } = new();
     public ICollection<UserRole> UserRoles { get; set; }
         = new List<UserRole>();
+    public List<Like> LikesSent { get; set; } = new();
+    public List<Like> LikesReceived { get; set; } = new();
 }
