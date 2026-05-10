@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Event;
+﻿using Application.Dtos.Events;
+using Application.Dtos.Events;
 using Application.Dtos.Message;
 using Application.Dtos.User;
 using AutoMapper;
@@ -17,13 +18,19 @@ public class MappingProfile : Profile
         CreateMap<UpdateUserDTO, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-  
-        CreateMap<AddEventDTO, Event>();
+        CreateMap<EventEntity, ReadEventDTO>();
 
+        CreateMap<AddEventDTO, EventEntity>()
+            .ForMember(dest => dest.CreatedBy, opt => opt.Ignore());
+
+        CreateMap<EditEventDTO, EventEntity>()
+            .ForAllMembers(opt =>
+        opt.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<CreateMessageDTO, Message>()
             .ForMember(dest => dest.SenderId, opt => opt.Ignore())
             .ForMember(dest => dest.SentAt, opt => opt.Ignore())
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
     }
 }
