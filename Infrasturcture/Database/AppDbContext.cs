@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Events;
+using Domain.Models.Likes;
 using Domain.Models.Matches;
 using Domain.Models.Messages;
 using Domain.Models.Participants;
@@ -23,6 +24,7 @@ namespace Infrastructure.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<FriendMatch> Matches { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +56,17 @@ namespace Infrastructure.Database
                 .HasForeignKey(m => m.User2Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.FromUser)
+                .WithMany(u => u.LikesSent)
+                .HasForeignKey(l => l.FromUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.ToUser)
+                .WithMany(u => u.LikesReceived)
+                .HasForeignKey(l => l.ToUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
@@ -68,7 +81,12 @@ namespace Infrastructure.Database
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
 
-         
+            modelBuilder.Entity<EventEntity>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.CreatedBy)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Admin" },
                 new Role { Id = 2, Name = "User" }
@@ -101,6 +119,18 @@ namespace Infrastructure.Database
                     Lonely = true,
                     PasswordHash = "AQAAAAIAAYagAAAAEI4hjOuDOPeVr7FfOvbhiJ2RDi3gYzRbtELCqYLi+sH56T0ePP1HPGmYfjjq+LCc3w==",
                     CreatedAt = new DateTime(2024, 4, 2, 14, 30, 0, DateTimeKind.Utc)
+                }
+            );
+            modelBuilder.Entity<UserRole>().HasData(
+                new UserRole
+                {
+                    UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    RoleId = 1 
+                },
+                new UserRole
+                {
+                    UserId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    RoleId = 2 
                 }
             );
         }

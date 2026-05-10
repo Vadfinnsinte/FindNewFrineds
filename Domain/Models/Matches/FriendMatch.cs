@@ -8,7 +8,7 @@ namespace Domain.Models.Matches
     public class FriendMatch
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Guid User1Id { get; set; }
         public User User1 { get; set; }
 

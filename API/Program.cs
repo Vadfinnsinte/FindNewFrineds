@@ -7,6 +7,7 @@ using Domain.Interfaces;
 using Infrastructure.Database;
 using Infrastructure.Repositories.Authorization;
 using Infrastructure.Repositories.Events;
+using Infrastructure.Repositories.Matches;
 using Infrastructure.Repositories.Participants;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Users;
@@ -39,6 +40,8 @@ namespace API
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<IParticipantRepository,ParticipantRepository>();
+            builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+            builder.Services.AddScoped<IFriendMatchRepository, FriendMatchRepository>();
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
 
