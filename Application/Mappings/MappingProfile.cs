@@ -1,4 +1,4 @@
-﻿using Application.Dtos.Event;
+﻿using Application.Dtos.Events;
 using Application.Dtos.Events;
 using Application.Dtos.Message;
 using Application.Dtos.User;

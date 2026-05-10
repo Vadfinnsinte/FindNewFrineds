@@ -1,5 +1,4 @@
-﻿using Application.Commands.Event;
-
+﻿using Application.Commands.Events.Create;
 using FluentValidation;
 
 public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>

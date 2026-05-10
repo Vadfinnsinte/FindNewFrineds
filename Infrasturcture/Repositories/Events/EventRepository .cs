@@ -35,5 +35,11 @@ namespace Infrastructure.Repositories.Events
         {
             return await _context.Events.ToListAsync();
         }
+        public async Task DeleteAsync(EventEntity eventEntity)
+        {
+            _context.Events.Remove(eventEntity);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

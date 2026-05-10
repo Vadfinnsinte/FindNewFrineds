@@ -1,5 +1,5 @@
-﻿using Application.Commands.Event;
-using Application.Dtos.Event;
+﻿using Application.Commands.Events.Create;
+using Application.Commands.Events.Delete;
 using Application.Dtos.Events;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -63,6 +63,30 @@ namespace API.Controllers
             {
                 EventId = id,
                 Dto = dto,
+                UserId = Guid.Parse(userIdString),
+                IsAdmin = User.IsInRole("Admin")
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(Guid id)
+        {
+            var userIdString =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userIdString == null)
+                return Unauthorized();
+
+            var command = new DeleteEventCommand
+            {
+                EventId = id,
                 UserId = Guid.Parse(userIdString),
                 IsAdmin = User.IsInRole("Admin")
             };

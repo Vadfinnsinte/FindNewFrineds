@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Dtos.Event
+namespace Application.Dtos.Events
 {
     public class AddEventDTO
     {

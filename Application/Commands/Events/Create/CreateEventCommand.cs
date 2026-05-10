@@ -1,9 +1,9 @@
 ﻿using Application.Common;
-using Application.Dtos.Event;
+using Application.Dtos.Events;
 using MediatR;
 
 
-namespace Application.Commands.Event
+namespace Application.Commands.Events.Create
 {
     public class CreateEventCommand : IRequest<OperationResult<string>>
     {

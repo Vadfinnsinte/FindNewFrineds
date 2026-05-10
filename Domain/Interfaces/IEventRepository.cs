@@ -11,5 +11,6 @@ namespace Domain.Interfaces
         Task<EventEntity?> GetByIdAsync(Guid id);
         Task UpdateAsync(EventEntity eventEntity);
         Task<List<EventEntity>> GetAllAsync();
+        Task DeleteAsync(EventEntity eventEntity);
     }
 }
