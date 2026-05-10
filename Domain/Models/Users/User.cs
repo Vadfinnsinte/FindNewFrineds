@@ -1,11 +1,14 @@
-﻿using Domain.Models.Participants;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Models.Likes;
+using Domain.Models.Matches;
+using Domain.Models.Participants;
+using Domain.Models.Roles;
+
 
 namespace Domain.Models.Users;
 public class User
 {
+    public string Email { get; set; }
+    public string PasswordHash { get; set; }
     public Guid Id { get; set; } = Guid.NewGuid();
     public int Age { get; set; }
 
@@ -21,4 +24,10 @@ public class User
 
     public string Interests { get; set; }
     public List<Participant> Participants { get; set; } = new();
+    public List<FriendMatch> MatchesAsUser1 { get; set; } = new();
+    public List<FriendMatch> MatchesAsUser2 { get; set; } = new();
+    public ICollection<UserRole> UserRoles { get; set; }
+        = new List<UserRole>();
+    public List<Like> LikesSent { get; set; } = new();
+    public List<Like> LikesReceived { get; set; } = new();
 }

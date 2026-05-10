@@ -1,5 +1,8 @@
-﻿//using FluentValidation;
+﻿using Application.Commands.User.Login;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Application
 {
@@ -9,11 +12,15 @@ namespace Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
 
-            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(assembly));
 
-            services.AddAutoMapper(assembly);
-            //services.AddValidatorsFromAssembly(assembly);
-
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(assembly);
+            });
+            services.AddValidatorsFromAssemblyContaining<LoginUserCommandValidator>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return services;
         }
     }
