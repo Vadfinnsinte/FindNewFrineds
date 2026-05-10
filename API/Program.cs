@@ -7,6 +7,7 @@ using Domain.Interfaces;
 using Infrastructure.Database;
 using Infrastructure.Repositories.Authorization;
 using Infrastructure.Repositories.Events;
+using Infrastructure.Repositories.Participants;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace API
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenService>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IEventRepository, EventRepository>();
+            builder.Services.AddScoped<IParticipantRepository,ParticipantRepository>();
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
 

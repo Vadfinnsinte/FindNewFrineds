@@ -21,7 +21,7 @@ public class RegisterUserCommandValidator
 
         RuleFor(x => x.Dto.Age)
             .GreaterThan(17);
-
+         
         RuleFor(x => x.Dto.City)
             .NotEmpty();
 

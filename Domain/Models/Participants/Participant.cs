@@ -8,7 +8,6 @@ namespace Domain.Models.Participants
 {
     public class Participant
     {
-        public Guid id { get; set; } = Guid.NewGuid();
         public Guid EventId { get; set; }
         public EventEntity Event { get; set; }
 
